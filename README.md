@@ -29,7 +29,14 @@ In this pipeline, we first create the train.py script which is used to do the fo
   Bandit policy is an early termination policy based on slack factor and evaluation interval. Bandit ends runs when the primary metric isn't within the specified   slack factor of the most succesful run.
 
 ## AutoML
-To use AutoML, we read the dataset directly into the Jupyter Notebook and pass it into the clean_data function of train.py. We then concatenate the predictor variables and the labels into pandas dataframe based training set. After creating this training set, we define the AutoML configuration using the AutoMLConfig method by passing in the training set identifying labels column, setting the task as classification, the primary metric which we need to optimize as accuracy, and the number of cross validations to be done as three. We then submit the AutoML experiment and let it run. After it finishes running, we identify the best model and save it.
+To use AutoML, we read the dataset directly into the Jupyter Notebook and pass it into the clean_data function of train.py. We then concatenate the predictor variables and the labels into pandas dataframe based training set. After creating this training set, we define the AutoML configuration using the AutoMLConfig method by passing in the training set identifying labels column, setting the task as classification, the primary metric which we need to optimize as accuracy, and the number of cross validations to be done as three. We then submit the AutoML experiment and let it run. After it finishes running, we identify the best model and save it. As described above, AutoMLConfig has the following parameters:
+
+    experiment_timeout_minutes=30, #the experiment runs for 30 minutes max
+    task='classification', #we want to run classification models only
+    primary_metric='accuracy', #we want to optmize for accuracy
+    training_data=train_data, #the pandas dataframe that contains the training data 
+    label_column_name='y', #the name of the column in the training data that contains the labels
+    n_cross_validations=3 #the number of n-fold cross validations
 
 ## Pipeline comparison
 **Compare the two models and their performance. What are the differences in accuracy? In architecture? If there was a difference, why do you think there was one?**
@@ -37,7 +44,7 @@ In comparing the hyperdrive pipeline results with the AutoML results, although b
 
 
 ## Future work
-We can try running the experiments again using different features, optimizing a different metric instead of accuracy such as maybe the F1 score, run hyperdrive using ensemble models such as XGBoost or RandomForest, or maybe even use deep learning in the AutoML.
+We can try running the experiments again using different features, optimizing a different metric instead of accuracy such as maybe the F1 score, run hyperdrive using ensemble models such as XGBoost or RandomForest, or maybe even use deep learning in the AutoML. Using different features may improve model performance and explainability. Using a different primary metric such as F1 score can help balance out precision and recall depending and may make more sense for certain problems. Using ensemble models instead of vanilla Logistic Regression could result in better accuracy by leveraging the outcomes of several models at a time via bagging or boosting. Deep Learning models could result in a better accuracy since the algorithms would develop their own features using the inputs and be able to model complex non-linearities which are not possible in many traditional ML models.
 
 ## Proof of cluster clean up
 The cluster was deleted at the end using the delete method.
